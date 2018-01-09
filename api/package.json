@@ -1,0 +1,14 @@
+{
+  "name": "dragonballsuper",
+  "version": "1.0.0",
+  "description": "API's do site do dragon ball super",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dragon-ball-super"
+  ],
+  "author": "Rafael Rodrigo Agapito",
+  "license": "ISC"
+}
