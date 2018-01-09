@@ -1,9 +1,4 @@
 # DragonBallSuper
 Site de fãs do anime Dragon Ball
 
-tteste
-
-
-teste
-
-rafael
+VOU COMEÇAR CRIANDO A API
