@@ -15,6 +15,7 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "mongoose": "^4.13.9",
+    "nodemon": "^1.14.10",
     "validator": "^9.2.0"
   }
 }
