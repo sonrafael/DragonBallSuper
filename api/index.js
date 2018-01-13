@@ -1,102 +1,49 @@
-// CONFIGURAÇÕES
-
-var express = require("express");
-var bodyParser = require("body-parser");
-var app = express();
-app.listen(5000);
-
-
-var mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-
-mongoose.connect('mongodb://localhost/dragonballsuper', {
-  useMongoClient: true,
-});
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'Erro ao conectar na database'));
-db.on('open', function() {
-    console.log("LOGOU NO BANCO");
-    var userSchema = mongoose.Schema({
-        fullname : String, 
-        email : String, 
-        username : String,
-        password : String, 
-        createdAt : Date
-    });
-    User = mongoose.model('User', userSchema);
-});
-var User;
-
-app.use(bodyParser.json());
-
-app.use(bodyParser.urlencoded({
-    extended : true
-}));
-
-//  || CONFIGURAÇÕES
+var app = require("./app-config.js");
+var userController = require("./controller/user-controller.js");
+var validator = require("validator");
 
 app.get("/users", function(req, res){
-    User.find({}, function(error, users){
-        if(error)
-            res.json({error : "Nao foi possivel retornar usuarios"});
-        else    
-            res.json(users);
-        });
+    userController.list(function(response){
+        res.json(response);
+    });
 });
 
 app.get("/users/:id", function(req, res){
-    User.findById(req.params.id, function(error, user){
-        if(error)
-            res.json({error : "Nao foi possivel retornar o usuario"});
-        else    
-            res.json(user);
-        });
-});
-
-app.post("/users", function(req, res){
-    new User({
-        fullname : req.body.fullname, 
-        email : req.body.email, 
-        username : req.body.username,
-        password : req.body.password,
-        createdAt : new Date()
-    }).save(function(error, user){
-        if(error)
-            res.json({erro : "não foi possivel salvar o usuario."});
-        else
-            res.json(user);
+    var id = validator.trim(validator.escape(req.params.id));
+    userController.userById(id, function(response){
+        res.json(response);
     });
 });
 
+app.post("/users", function(req, res){
+    var user = {
+        fullname : validator.trim(validator.escape(req.body.fullname)), 
+        email : validator.trim(validator.escape(req.body.email)), 
+        username : validator.trim(validator.escape(req.body.username)),
+        password : validator.trim(validator.escape(req.body.password)),
+    };
+
+    userController.save(user, function(response){
+        res.json(response);
+    });   
+});
+
 app.put("/users/:id", function(req, res){
-    User.findById(req.param('id'),function(error, user) {
-        if(error)
-            res.json({erro : "não foi possivel alterar o usuario."});
-        else{
-            user.fullname = req.body.fullname ? req.body.fullname : user.fullname;
-            user.email = req.body.email ? req.body.email : user.email;
-            user.username = req.body.username ? req.body.username : user.username;
-            user.password = req.body.password ? req.body.password : user.password;            
-            user.save(function(error, user){
-                if(error)
-                    res.json({erro : "não foi possivel atualizar o usuario."});
-                else
-                    res.json(user);
-            });
-        }        
-    })
+    var id = validator.trim(validator.escape(req.params.id));
+    var newUser = {
+        fullname : validator.trim(validator.escape(req.body.fullname)),
+        email : validator.trim(validator.escape(req.body.email)),
+        username : validator.trim(validator.escape(req.body.username)),
+        password : validator.trim(validator.escape(req.body.password))
+    };
+    userController.update(id, newUser, function(response){
+        res.json(response);
+    });
 });
 
 app.delete("/users/:id", function(req, res){
-    User.findById(req.params.id, function(error, user){
-        if(error)
-            res.json({error : "Nao foi possivel retornar o usuario"});
-        else{
-            user.remove(function(){
-                if(!error)
-                    res.json({response : "Usuário Excluído com sucesso."})
-            });
-        }            
+    var id = validator.trim(validator.escape(req.params.id));
+    userController.delete(id, function(response){
+        res.json(response);
     });
 });
