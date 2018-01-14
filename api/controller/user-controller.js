@@ -1,66 +1,59 @@
-var db = require("../db-config.js");
+var app = require("../config/app-config.js");
+var userDao = require("../dao/user-dao.js");
+var validator = require("validator");
 
-exports.list = function(callback){
-    db.User.find({}, function(error, users){
-        if(error)
-            callback({error : "Nao foi possivel retornar usuarios"});
-        else    
-            callback(users);
+app.get("/users", function(req, res){
+    userDao.list(function(response){
+        res.json(response);
     });
-};
+});
 
-exports.userById = function(id, callback){
-    db.User.findById(id, function(error, user){
-        if(error)
-            callback({error : "Nao foi possivel retornar o usuario"});
-        else    
-            callback(user);
+app.get("/users/:id", function(req, res){
+    var id = validator.trim(validator.escape(req.params.id));
+    userDao.userById(id, function(response){
+        res.json(response);
     });
-};
+});
 
-exports.save = function(user, callback){
-    new db.User({
-        fullname : user.fullname, 
-        email : user.email, 
-        username : user.username,
-        password : user.password,
-        createdAt : new Date()
-    }).save(function(error, user){
-        if(error)
-            callback({erro : "não foi possivel salvar o usuario."});
-        else
-            callback(user);
+app.post("/users", function(req, res){
+    var user = {
+        fullname : validator.trim(validator.escape(req.body.fullname)), 
+        email : validator.trim(validator.escape(req.body.email)), 
+        username : validator.trim(validator.escape(req.body.username)),
+        password : validator.trim(validator.escape(req.body.password)),
+    };
+
+    userDao.save(user, function(response){
+        res.json(response);
+    });   
+});
+
+app.put("/users/:id", function(req, res){
+    var id = validator.trim(validator.escape(req.params.id));
+    var newUser = {
+        fullname : validator.trim(validator.escape(req.body.fullname)),
+        email : validator.trim(validator.escape(req.body.email)),
+        username : validator.trim(validator.escape(req.body.username)),
+        password : validator.trim(validator.escape(req.body.password))
+    };
+    userDao.update(id, newUser, function(response){
+        res.json(response);
     });
-};
+});
 
-exports.update = function(id, newUser, callback){
-    db.User.findById(id, function(error, user) {
-        if(error)
-            callback({erro : "não foi possivel alterar o usuario."});
-        else{
-            user.fullname = newUser.fullname ? newUser.fullname : user.fullname;
-            user.email = newUser.email ? newUser.email : user.email;
-            user.username = newUser.username ? newUser.username : user.username;
-            user.password = newUser.password ? newUser.password : user.password;
-            user.save(function(error, user){
-                if(error)
-                    callback({erro : "não foi possivel atualizar o usuario."});
-                else
-                    callback(user);
-            });
-        }        
-    })
-};
-
-exports.delete = function(id, callback){
-    db.User.findById(id, function(error, user){
-        if(error)
-            callback({error : "Nao foi possivel retornar o usuario"});
-        else{
-            user.remove(function(){
-                if(!error)
-                    callback({response : "Usuário Excluído com sucesso."})
-            });
-        }            
+app.delete("/users/:id", function(req, res){
+    var id = validator.trim(validator.escape(req.params.id));
+    userDao.delete(id, function(response){
+        res.json(response);
     });
-};
+});
+
+app.post("/users/login", function(req, res){
+    var newUser = {
+        username : validator.trim(validator.escape(req.body.username)),
+        password : validator.trim(validator.escape(req.body.password))
+    };
+    userDao.login(newUser, function(response){
+        res.json(response);
+    });
+});
