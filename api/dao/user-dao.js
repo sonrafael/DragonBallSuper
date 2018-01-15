@@ -22,7 +22,7 @@ exports.userById = function(id, callback){
 exports.save = function(newUser, callback){
     schema.User.find({username : newUser.username}, function(error, user){
         if(user.length > 0)
-            callback({error : "Nome de usuário já existe."});
+            callback({error : "Nome de usuário já existe. Escolha um nome diferente."});
         else{
             new schema.User({
                 fullname : newUser.fullname, 
@@ -57,8 +57,8 @@ exports.update = function(id, newUser, callback){
                 else
                     callback(user);
             });
-        }        
-    })
+        }
+    });
 };
 
 exports.delete = function(id, callback){
@@ -78,7 +78,7 @@ exports.login = function(newUser, callback){
     schema.User.find({username : newUser.username}, function(error, user){
         if(error)
             callback({error : "Nome de usuário ou senha incorreto."});
-        else if(encrypt.compareSync(newUser.password , user[0].password)){           
+        else if(user.length > 0 && encrypt.compareSync(newUser.password , user[0].password)){           
             callback(user);
         }
         else{
@@ -86,4 +86,3 @@ exports.login = function(newUser, callback){
         }
     });
 }
-
