@@ -16,14 +16,14 @@ app.get("/users/:id", function(req, res){
 });
 
 app.post("/users", function(req, res){
-    var user = {
+    var newUser = {
         fullname : validator.trim(validator.escape(req.body.fullname)), 
         email : validator.trim(validator.escape(req.body.email)), 
         username : validator.trim(validator.escape(req.body.username)),
         password : validator.trim(validator.escape(req.body.password)),
     };
 
-    userDao.save(user, function(response){
+    userDao.save(newUser, function(response){
         res.json(response);
     });   
 });
