@@ -47,6 +47,9 @@ exports.update = function(id, newUser, callback){
         if(error)
             callback({error : "Não foi possível alterar o usuário."});
         else{
+            if(newUser.password)
+                encrypt.hashSync(newUser.password, 10);
+
             user.fullname = newUser.fullname ? newUser.fullname : user.fullname;
             user.email = newUser.email ? newUser.email : user.email;
             user.username = newUser.username ? newUser.username : user.username;
