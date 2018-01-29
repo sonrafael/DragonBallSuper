@@ -1,10 +1,12 @@
 var db = require("../config/db-config.js");
 var mongoose = require("mongoose");
 var ObjectId = mongoose.Schema.Types.ObjectId;
-var categorySchema = mongoose.Schema({
+var characterSchema = mongoose.Schema({
     _id : ObjectId,
     name : {type : String, required : true},
     description : String,
-    createdAt : Date
+    createdAt : Date,
+    race : { type: mongoose.Schema.Types.ObjectId, ref: 'Race' },
+    // images
 });
-exports.Category = mongoose.model('Category', categorySchema);
+exports.Character = mongoose.model('Character', characterSchema);
