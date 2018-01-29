@@ -23,11 +23,8 @@ exports.notificationsByCategory = function(categoryId, callback){
     schema.Notification.find({category : categoryId}, function(error, notifications){
         if(error)
             callback({error : "Não foi possível retornar a notificações."});
-        else{
-            notifications.forEach()
-            callback(notifications);
-        }
-            
+        else
+            callback(notifications);            
     }).populate('category');
 };
 
