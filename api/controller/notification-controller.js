@@ -15,22 +15,29 @@ app.get("/notifications/:id", function(req, res){
     });
 });
 
+app.get("/notificationsByCategory/:categoryId", function(req, res){
+    var categoryId = validator.trim(validator.escape(req.params.categoryId));
+    notificationDao.notificationsByCategory(categoryId, function(response){
+        res.json(response);
+    });
+});
+
 app.post("/notifications", function(req, res){
     var newNotification = {
-        categories : categories,
+        categoryId : validator.trim(validator.escape(req.body.categoryId)),
         title : validator.trim(validator.escape(req.body.title)),
         teaser : validator.trim(validator.escape(req.body.teaser)),
         text : validator.trim(validator.escape(req.body.text))
     };
     notificationDao.save(newNotification, function(response){
         res.json(response);
-    });   
+    });
 });
 
 app.put("/notifications/:id", function(req, res){
     var id = validator.trim(validator.escape(req.params.id));
     var newNotification = {
-        categories : categories,
+        categoryId : validator.trim(validator.escape(req.body.categoryId)),
         title : validator.trim(validator.escape(req.body.title)),
         teaser : validator.trim(validator.escape(req.body.teaser)),
         text : validator.trim(validator.escape(req.body.text))
