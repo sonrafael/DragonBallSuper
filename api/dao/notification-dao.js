@@ -30,6 +30,7 @@ exports.notificationsByCategory = function(categoryId, callback){
 
 exports.save = function(newNotification, callback){
     var categoryId = newNotification.categoryId;
+    //var images = newNotification.images (BUSCAR AS IMAGENS E SALVAR EM UM ARRAY)
     categoryDao.categoryById(categoryId, function(category){
         if(category){
             new schema.Notification({

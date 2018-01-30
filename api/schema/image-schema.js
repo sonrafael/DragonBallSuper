@@ -4,6 +4,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 var imageSchema = mongoose.Schema({
     _id : ObjectId,
     name : {type : String, required : true},
+    alias : String,
     alt : String,
     createdAt : Date,
     path : String

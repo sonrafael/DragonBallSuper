@@ -27,7 +27,8 @@ app.post("/notifications", function(req, res){
         categoryId : validator.trim(validator.escape(req.body.categoryId)),
         title : validator.trim(validator.escape(req.body.title)),
         teaser : validator.trim(validator.escape(req.body.teaser)),
-        text : validator.trim(validator.escape(req.body.text))
+        text : validator.trim(validator.escape(req.body.text)),
+        images : validator.trim(validator.escape(req.body.images))
     };
     notificationDao.save(newNotification, function(response){
         res.json(response);
