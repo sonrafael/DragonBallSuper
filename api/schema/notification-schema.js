@@ -7,7 +7,7 @@ var notificationSchema = mongoose.Schema({
     title : String, 
     teaser : String, 
     text : String, 
-    // images
+    images : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Image' }]
     // tags
 });
 
